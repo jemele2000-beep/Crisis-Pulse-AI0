@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { 
   ShieldAlert, Globe, TrendingUp, Cpu, Landmark, CloudSun, 
-  BarChart3, User, Search, AlertTriangle, ArrowRight, DollarSign, Home 
+  BarChart3, User, Search, AlertTriangle, ArrowRight, DollarSign, Home, CheckCircle2 
 } from 'lucide-react';
 
+// إعداد عميل Supabase باستخدام متغيرات البيئة
+const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL || process.env?.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env?.VITE_SUPABASE_ANON_KEY || process.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = (supabaseUrl && supabaseAnonKey) ? createClient(supabaseUrl, supabaseAnonKey) : null;
+
 export default function CrisisPulseApp() {
-  const [lang, setLang] = useState('ar'); // 'ar' or 'en'
+  const [lang, setLang] = useState('ar'); // 'ar' أو 'en'
   const [isAdmin, setIsAdmin] = useState(false);
-  const [view, setView] = useState('user'); // 'user' or 'admin'
+  const [view, setView] = useState('user'); // 'user' أو 'admin'
   
-  // Inputs
+  // مدخلات المستخدم
   const [newsInput, setNewsInput] = useState('');
   const [country, setCountry] = useState('SA');
   const [city, setCity] = useState('الرياض');
@@ -17,7 +23,14 @@ export default function CrisisPulseApp() {
   const [loading, setLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
 
-  // Translation Dictionaries
+  // إحصائيات الأدمن
+  const [adminStats, setAdminStats] = useState({
+    totalViews: 1420,
+    topCategory: '💵 اقتصاد ومالية (54%)',
+    topCity: 'الرياض (32%)'
+  });
+
+  // معجم الترجمة ثنائي اللغة
   const t = {
     ar: {
       title: "Crisis Pulse AI",
@@ -77,10 +90,30 @@ export default function CrisisPulseApp() {
 
   const currentT = t[lang];
 
-  // AI Logic Simulation with dynamic contextual response
-  const handleAnalyze = () => {
+  // تسجيل الأحداث في Supabase
+  const logAnalyticsEvent = async (cat, ctry, cty) => {
+    if (!supabase) return;
+    try {
+      await supabase.from('analytics_events').insert([
+        { 
+          country_code: ctry, 
+          city: cty, 
+          category: cat, 
+          action_type: 'view_analysis' 
+        }
+      ]);
+    } catch (err) {
+      console.error('Supabase logging error:', err);
+    }
+  };
+
+  // محاكاة استجابة الذكاء الاصطناعي وحفظ التحليل
+  const handleAnalyze = async () => {
     if (!newsInput) return;
     setLoading(true);
+
+    // تسجيل الحدث في قاعدة البيانات
+    await logAnalyticsEvent(category, country, city);
 
     setTimeout(() => {
       let mockAnalysis = {
@@ -118,7 +151,7 @@ export default function CrisisPulseApp() {
         };
       } else if (category === 'climate') {
         mockAnalysis.climate = lang === 'ar' ? {
-          housing: `تأثر مباشر لبعض مناطق الأحياء في (${city}) بالتغيرات الجوية المتوقعة.`,
+          housing: `تأثر مباشر لبعض الأحياء السكنية في (${city}) بالتغيرات الجوية المتوقعة.`,
           city: "تغيرات في حركة التنقل والبنية التحتية وضغط إضافي على شبكات الكهرباء والماء.",
           strategy: "🛡️ إجراء وقائي: صيانة أنظمة التكييف والعزل المنزلي، وتجهيز حقيبة طوارئ بسيطة."
         } : {
@@ -135,7 +168,7 @@ export default function CrisisPulseApp() {
 
   return (
     <div className={`min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 ${lang === 'ar' ? 'rtl' : 'ltr'}`}>
-      {/* Header */}
+      {/* الهيدر والعناوين */}
       <header className="max-w-5xl mx-auto flex justify-between items-center pb-6 border-b border-slate-800">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-blue-400 flex items-center gap-2">
@@ -148,7 +181,7 @@ export default function CrisisPulseApp() {
         <div className="flex gap-2">
           <button 
             onClick={() => setLang(lang === 'ar' ? 'en' : 'ar')}
-            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700"
+            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700 transition"
           >
             {currentT.toggleLang}
           </button>
@@ -157,25 +190,25 @@ export default function CrisisPulseApp() {
               setIsAdmin(!isAdmin);
               setView(isAdmin ? 'user' : 'admin');
             }}
-            className={`px-3 py-1.5 text-xs rounded border ${isAdmin ? 'bg-amber-600 border-amber-500' : 'bg-slate-800 border-slate-700'}`}
+            className={`px-3 py-1.5 text-xs rounded border transition ${isAdmin ? 'bg-amber-600 border-amber-500' : 'bg-slate-800 border-slate-700'}`}
           >
             {currentT.toggleAdmin}
           </button>
         </div>
       </header>
 
-      {/* Main Container */}
+      {/* المحتوى الرئيسي */}
       <main className="max-w-5xl mx-auto mt-6">
         {view === 'user' ? (
           <div className="grid md:grid-cols-12 gap-6">
-            {/* Input Controls */}
+            {/* مدخلات التحكم والخبر */}
             <div className="md:col-span-5 bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
               <div>
                 <label className="block text-xs font-medium text-slate-400 mb-1">{currentT.selectCategory}</label>
                 <select 
                   value={category} 
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-sm"
+                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-sm text-slate-100"
                 >
                   <option value="economy">{currentT.categories.economy}</option>
                   <option value="climate">{currentT.categories.climate}</option>
@@ -190,12 +223,13 @@ export default function CrisisPulseApp() {
                   <select 
                     value={country} 
                     onChange={(e) => setCountry(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-sm"
+                    className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-sm text-slate-100"
                   >
                     <option value="SA">السعودية (KSA)</option>
                     <option value="AE">الإمارات (UAE)</option>
                     <option value="EG">مصر (Egypt)</option>
                     <option value="US">أمريكا (USA)</option>
+                    <option value="SD">السودان (Sudan)</option>
                   </select>
                 </div>
                 <div>
@@ -204,7 +238,7 @@ export default function CrisisPulseApp() {
                     type="text" 
                     value={city} 
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-sm"
+                    className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-sm text-slate-100"
                   />
                 </div>
               </div>
@@ -223,13 +257,13 @@ export default function CrisisPulseApp() {
               <button 
                 onClick={handleAnalyze}
                 disabled={loading}
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded font-medium text-sm flex justify-center items-center gap-2"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded font-medium text-sm flex justify-center items-center gap-2 transition"
               >
                 {loading ? currentT.loading : currentT.analyzeBtn}
               </button>
             </div>
 
-            {/* Analysis Output */}
+            {/* ناتج التحليل */}
             <div className="md:col-span-7 bg-slate-900 p-5 rounded-xl border border-slate-800">
               {analysisResult ? (
                 <div className="space-y-5">
@@ -240,7 +274,7 @@ export default function CrisisPulseApp() {
                     </ul>
                   </section>
 
-                  {/* Financial Section */}
+                  {/* القسم المالي */}
                   {analysisResult.financial && (
                     <section className="bg-slate-950 p-4 rounded border border-emerald-900/50">
                       <h3 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2">
@@ -253,7 +287,7 @@ export default function CrisisPulseApp() {
                     </section>
                   )}
 
-                  {/* Climate Section */}
+                  {/* القسم المناخي */}
                   {analysisResult.climate && (
                     <section className="bg-slate-950 p-4 rounded border border-cyan-900/50">
                       <h3 className="text-sm font-semibold text-cyan-400 mb-2 flex items-center gap-2">
@@ -286,7 +320,7 @@ export default function CrisisPulseApp() {
             </div>
           </div>
         ) : (
-          /* Admin View */
+          /* واجهة لوحة تحكم الأدمن */
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
               <BarChart3 className="w-6 h-6" />
@@ -296,15 +330,15 @@ export default function CrisisPulseApp() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
                 <p className="text-xs text-slate-400">{currentT.totalViews}</p>
-                <p className="text-2xl font-bold text-blue-400 mt-1">1,420</p>
+                <p className="text-2xl font-bold text-blue-400 mt-1">{adminStats.totalViews}</p>
               </div>
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
                 <p className="text-xs text-slate-400">{currentT.topCategory}</p>
-                <p className="text-2xl font-bold text-emerald-400 mt-1">💵 اقتصاد ومالية (54%)</p>
+                <p className="text-2xl font-bold text-emerald-400 mt-1">{adminStats.topCategory}</p>
               </div>
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
                 <p className="text-xs text-slate-400">{currentT.topCity}</p>
-                <p className="text-2xl font-bold text-cyan-400 mt-1">الرياض (32%)</p>
+                <p className="text-2xl font-bold text-cyan-400 mt-1">{adminStats.topCity}</p>
               </div>
             </div>
           </div>
