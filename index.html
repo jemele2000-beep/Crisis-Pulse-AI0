@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Crisis Pulse AI - منصة إدارة الأزمات</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   </head>
   <body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
 
@@ -20,8 +17,10 @@
             Crisis Pulse AI
           </h1>
         </div>
-        <div id="nav-actions" class="flex items-center gap-3">
-          <!-- سيتم تحديثه عبر JavaScript -->
+        <div class="flex items-center gap-3">
+          <button id="toggle-admin-btn" onclick="promptAdmin()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+            🔒 دخول الأدمن
+          </button>
         </div>
       </div>
     </header>
@@ -29,28 +28,7 @@
     <!-- Main Container -->
     <main class="max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6">
 
-      <!-- Login Form (Unauthenticated) -->
-      <div id="login-section" class="bg-slate-900/80 border border-slate-800 rounded-xl p-6 max-w-md mx-auto shadow-2xl">
-        <h2 class="text-lg font-bold text-center mb-4 text-slate-200">تسجيل الدخول للنظام</h2>
-        <form id="login-form" class="space-y-4">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">البريد الإلكتروني</label>
-            <input id="login-email" type="email" required placeholder="jemele2000@gmail.com" 
-                   class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm focus:outline-none focus:border-red-500 text-slate-100" />
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">كلمة المرور</label>
-            <input id="login-password" type="password" required 
-                   class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm focus:outline-none focus:border-red-500 text-slate-100" />
-          </div>
-          <button type="submit" id="login-btn" class="w-full bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white py-2.5 rounded-lg text-sm font-medium transition">
-            دخول
-          </button>
-          <p id="login-msg" class="text-xs text-center text-amber-400 hidden mt-2"></p>
-        </form>
-      </div>
-
-      <!-- Main Dashboard View -->
+      <!-- Main Dashboard View (Visible to Everyone) -->
       <div id="dashboard-view" class="space-y-6">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
@@ -94,7 +72,7 @@
         </div>
       </div>
 
-      <!-- Admin View (Protected) -->
+      <!-- Admin View (Protected by simple password) -->
       <div id="admin-view" class="space-y-6 hidden">
         <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
@@ -104,7 +82,7 @@
               <p class="text-xs text-amber-300/70">أهلاً بك، هذه المنطقة مخصصة لإدارة النظام والتحكم الكامل.</p>
             </div>
           </div>
-          <span class="bg-amber-500 text-slate-950 font-bold text-xs px-2.5 py-1 rounded-md">Admins Only</span>
+          <button onclick="logoutAdmin()" class="bg-red-500/20 text-red-400 text-xs px-3 py-1 rounded-md border border-red-500/30">إغلاق اللوحة</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -144,82 +122,25 @@
     </main>
 
     <script>
-      const SUPABASE_URL = 'https://hupgacopzhqqsazsvefg.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1cGdhY29wemhxcXNhenN2ZWZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyOTcxNzQsImV4cCI6MjEwMjg3MzE3NH0.0ssHo3KGCSphiuFSiNUoG6aOCzAPP3Knzw6uK3qBRB8';
-      const ADMIN_EMAIL = 'jemele2000@gmail.com';
+      // كلمة المرور الخاصة بك كأدمن
+      const ADMIN_PASSWORD = "admin"; 
 
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-      const loginSection = document.getElementById('login-section');
-      const dashboardView = document.getElementById('dashboard-view');
-      const adminView = document.getElementById('admin-view');
-      const navActions = document.getElementById('nav-actions');
-      const loginForm = document.getElementById('login-form');
-      const loginMsg = document.getElementById('login-msg');
-
-      let currentUser = null;
-
-      async function checkUser() {
-        const { data: { session } } = await supabase.auth.getSession();
-        updateUI(session?.user ?? null);
-      }
-
-      function updateUI(user) {
-        currentUser = user;
-        if (user) {
-          loginSection.classList.add('hidden');
-          const isAdmin = user.email === ADMIN_EMAIL;
-          
-          navActions.innerHTML = `
-            ${isAdmin ? `<button onclick="showTab('admin')" class="bg-amber-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium">لوحة الأدمن</button>` : ''}
-            <button onclick="showTab('dashboard')" class="text-slate-400 hover:text-white text-sm font-medium">الرئيسية</button>
-            <span class="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded-md">${user.email}</span>
-            <button onclick="handleLogout()" class="text-xs bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg hover:bg-red-500/20">خروج</button>
-          `;
-        } else {
-          loginSection.classList.remove('hidden');
-          adminView.classList.add('hidden');
-          dashboardView.classList.remove('hidden');
-          navActions.innerHTML = `<span class="text-xs text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded-full">زائر</span>`;
+      function promptAdmin() {
+        const pass = prompt("أدخل كلمة مرور الأدمن:");
+        if (pass === ADMIN_PASSWORD) {
+          document.getElementById('admin-view').classList.remove('hidden');
+          document.getElementById('toggle-admin-btn').innerText = '🛡️ لوحة الأدمن مفعلة';
+          document.getElementById('toggle-admin-btn').classList.add('bg-amber-600', 'text-white');
+        } else if (pass !== null) {
+          alert("كلمة المرور غير صحيحة!");
         }
       }
 
-      function showTab(tab) {
-        if (tab === 'admin') {
-          adminView.classList.remove('hidden');
-          dashboardView.classList.add('hidden');
-        } else {
-          adminView.classList.add('hidden');
-          dashboardView.classList.remove('hidden');
-        }
+      function logoutAdmin() {
+        document.getElementById('admin-view').classList.add('hidden');
+        document.getElementById('toggle-admin-btn').innerText = '🔒 دخول الأدمن';
+        document.getElementById('toggle-admin-btn').classList.remove('bg-amber-600', 'text-white');
       }
-
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const btn = document.getElementById('login-btn');
-
-        btn.innerText = 'جاري التحقق...';
-        loginMsg.classList.add('hidden');
-
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-        if (error) {
-          loginMsg.innerText = 'خطأ: ' + error.message;
-          loginMsg.classList.remove('hidden');
-        } else {
-          updateUI(data.user);
-        }
-        btn.innerText = 'دخول';
-      });
-
-      async function handleLogout() {
-        await supabase.auth.signOut();
-        updateUI(null);
-      }
-
-      checkUser();
     </script>
   </body>
 </html>
