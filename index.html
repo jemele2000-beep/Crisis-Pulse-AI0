@@ -1,145 +1,438 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-root">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Crisis Pulse AI - منصة إدارة الأزمات</title>
+    <title>Crisis Pulse AI - نبض الأزمات</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .smooth-transition { transition: all 0.3s ease-in-out; }
+    </style>
   </head>
-  <body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
+  <body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-red-500 selection:text-white">
 
-    <!-- Navbar -->
-    <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50">
-      <div class="max-w-6xl mx-auto flex justify-between items-center">
+    <!-- 1. صفحة الهبوط (Landing Page) -->
+    <section id="landing-page" class="min-h-screen flex flex-col justify-between p-6 max-w-5xl mx-auto">
+      <!-- Header -->
+      <header class="flex justify-between items-center py-4 border-b border-slate-800">
         <div class="flex items-center gap-2">
-          <span class="text-red-500 text-2xl font-bold">⚠️</span>
-          <h1 class="text-xl font-bold bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">
+          <span class="text-3xl">⚠️</span>
+          <span class="text-2xl font-black bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">
             Crisis Pulse AI
-          </h1>
+          </span>
         </div>
         <div class="flex items-center gap-3">
-          <button id="toggle-admin-btn" onclick="promptAdmin()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition">
-            🔒 دخول الأدمن
+          <!-- Toggle Language Button -->
+          <button onclick="toggleLanguage()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 px-3 py-1.5 rounded-lg font-bold">
+            🌐 <span id="lang-btn-text">English</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Landing Content -->
+      <div class="my-auto py-12 text-center space-y-6 max-w-3xl mx-auto">
+        <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-4 py-2 rounded-full inline-block shadow-inner" id="hero-badge">
+          🤖 منصة الذكاء الاصطناعي الأولى لمتابعة وتوقع الأزمات
+        </span>
+        
+        <h1 class="text-4xl md:text-6xl font-black leading-tight text-white" id="hero-title">
+          احصل على الأخبار العاجلة والتحليلات الأزموية في <span class="text-amber-500">الوقت الفعلي</span>
+        </h1>
+        
+        <p class="text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto" id="hero-desc">
+          يقوم نظامنا بتجميع وتتبع الأخبار العاجلة من كبرى المصادر المعتمدة حول العالم، ثم تحليل تأثيراتها السياسية، الصحية، والبيئية فور حدوثها لتزويدك برؤية دقيقة وتنبيهات مبكرة.
+        </p>
+
+        <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
+          <button onclick="enterApp()" class="bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg shadow-red-900/30 smooth-transition transform hover:-translate-y-1" id="enter-btn">
+            الدخول للتطبيق المباشر 🚀
           </button>
         </div>
       </div>
-    </header>
 
-    <!-- Main Container -->
-    <main class="max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6">
-
-      <!-- Main Dashboard View (Visible to Everyone) -->
-      <div id="dashboard-view" class="space-y-6">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-bold text-slate-100">متابعة الأزمات والتنبيهات المباشرة</h2>
-            <p class="text-sm text-slate-400 mt-1">منصة تحليل وتتبع الأزمات في الوقت الفعلي باستخدام الذكاء الاصطناعي.</p>
-          </div>
-          <div class="flex gap-3">
-            <div class="bg-slate-950 px-4 py-3 rounded-lg border border-slate-800 text-center">
-              <span class="block text-xl font-bold text-red-500">5</span>
-              <span class="text-xs text-slate-500">تنبيهات نشطة</span>
-            </div>
-            <div class="bg-slate-950 px-4 py-3 rounded-lg border border-slate-800 text-center">
-              <span class="block text-xl font-bold text-emerald-400">مستقر</span>
-              <span class="text-xs text-slate-500">حالة النظام</span>
-            </div>
-          </div>
+      <!-- Features -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-6 text-start">
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+          <span class="text-2xl block mb-2">📰</span>
+          <h3 class="font-bold text-slate-200 mb-1" id="feat-1-title">مصادر موثوقة</h3>
+          <p class="text-xs text-slate-400" id="feat-1-desc">تجميع فوري لأهم الأخبار العاجلة من وكالات الأخبار العالمية والمحلية.</p>
         </div>
-
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3">
-            <div class="flex justify-between items-start">
-              <span class="bg-red-500/10 text-red-400 text-xs px-2.5 py-1 rounded-md border border-red-500/20">عالي الخطورة</span>
-              <span class="text-xs text-slate-500">قبل 15 دقيقة</span>
-            </div>
-            <h3 class="font-bold text-slate-200">تحليل انقطاع سلاسل الإمداد الطبية</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              تراقب الخوارزميات نقصاً محتملاً في الإمدادات الأسبوع المقبل، يُنصح بمراجعة مخزون الطوارئ.
-            </p>
-          </div>
-
-          <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3">
-            <div class="flex justify-between items-start">
-              <span class="bg-amber-500/10 text-amber-400 text-xs px-2.5 py-1 rounded-md border border-amber-500/20">متوسط الخطورة</span>
-              <span class="text-xs text-slate-500">قبل ساعة</span>
-            </div>
-            <h3 class="font-bold text-slate-200">تنبيه تقلبات الشبكة والاتصالات</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              تم رصد تذبذب في مؤشرات الاتصال في القطاع الشرقي، جاري مراقبة استقرار الخدمة.
-            </p>
-          </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+          <span class="text-2xl block mb-2">🧠</span>
+          <h3 class="font-bold text-slate-200 mb-1" id="feat-2-title">تحليل ذكي</h3>
+          <p class="text-xs text-slate-400" id="feat-2-desc">ضغط أي خبر يقدم لك تقريراً فورياً عن المخاطر والتأثيرات المتوقعة.</p>
+        </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+          <span class="text-2xl block mb-2">📊</span>
+          <h3 class="font-bold text-slate-200 mb-1" id="feat-3-title">تصنيف موضوعي</h3>
+          <p class="text-xs text-slate-400" id="feat-3-desc">تقسيم الأخبار تلقائياً حسب الأقسام السياسية والصحية والطقس والتقنية.</p>
         </div>
       </div>
+    </section>
 
-      <!-- Admin View (Protected by simple password) -->
-      <div id="admin-view" class="space-y-6 hidden">
-        <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-center justify-between">
+    <!-- 2. Main Application -->
+    <div id="main-app" class="hidden min-h-screen flex flex-col">
+      <!-- Navbar -->
+      <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+          <div class="flex items-center gap-2 cursor-pointer" onclick="showLanding()">
+            <span class="text-2xl">⚠️</span>
+            <h1 class="text-xl font-bold bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">
+              Crisis Pulse AI
+            </h1>
+          </div>
           <div class="flex items-center gap-3">
-            <span class="text-2xl">🛡️</span>
-            <div>
-              <h3 class="font-bold text-amber-400">لوحة تحكم المسؤول (Admin Panel)</h3>
-              <p class="text-xs text-amber-300/70">أهلاً بك، هذه المنطقة مخصصة لإدارة النظام والتحكم الكامل.</p>
-            </div>
-          </div>
-          <button onclick="logoutAdmin()" class="bg-red-500/20 text-red-400 text-xs px-3 py-1 rounded-md border border-red-500/30">إغلاق اللوحة</button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
-            <span class="text-xs text-slate-500 block mb-1">إجمالي المستخدمين</span>
-            <span class="text-3xl font-bold text-slate-100">142</span>
-          </div>
-          <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
-            <span class="text-xs text-slate-500 block mb-1">البلاغات المُعالجة</span>
-            <span class="text-3xl font-bold text-emerald-400">38</span>
-          </div>
-          <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
-            <span class="text-xs text-slate-500 block mb-1">التنبيهات الفعالة</span>
-            <span class="text-3xl font-bold text-red-500">5</span>
+            <button onclick="toggleLanguage()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 px-3 py-1.5 rounded-lg font-bold">
+              🌐 <span class="lang-btn-text-nav">English</span>
+            </button>
+            <button onclick="showLanding()" class="text-xs text-slate-400 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700" id="nav-home">
+              الرئيسية
+            </button>
           </div>
         </div>
+      </header>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
-          <h4 class="font-bold text-slate-200 flex items-center gap-2">
-            <span>🔔</span> إصدار تنبيه طوارئ جديد
-          </h4>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="عنوان التنبيه..." class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500" />
-            <select class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
-              <option>عالي الخطورة (Red)</option>
-              <option>متوسط الخطورة (Yellow)</option>
-              <option>عادي (Info)</option>
-            </select>
-          </div>
-          <textarea rows="3" placeholder="تفاصيل التنبيه وتوصيات الذكاء الاصطناعي..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500"></textarea>
-          <button class="bg-amber-600 hover:bg-amber-500 text-white font-medium px-5 py-2 rounded-lg text-sm transition">
-            نشر التنبيه للنظام
+      <!-- Main Content -->
+      <main class="max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6 flex-grow">
+        
+        <!-- Category Tabs -->
+        <div class="flex border-b border-slate-800 overflow-x-auto gap-2 pb-2">
+          <button onclick="filterNews('all')" id="tab-all" class="tab-btn bg-red-600 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-lg whitespace-nowrap">
+            الكل 🔥
+          </button>
+          <button onclick="filterNews('political')" id="tab-political" class="tab-btn bg-slate-900 text-slate-400 hover:text-white text-xs md:text-sm font-bold px-4 py-2 rounded-lg border border-slate-800 whitespace-nowrap">
+            سياسية 🏛️
+          </button>
+          <button onclick="filterNews('health')" id="tab-health" class="tab-btn bg-slate-900 text-slate-400 hover:text-white text-xs md:text-sm font-bold px-4 py-2 rounded-lg border border-slate-800 whitespace-nowrap">
+            صحية 🏥
+          </button>
+          <button onclick="filterNews('weather')" id="tab-weather" class="tab-btn bg-slate-900 text-slate-400 hover:text-white text-xs md:text-sm font-bold px-4 py-2 rounded-lg border border-slate-800 whitespace-nowrap">
+            الطقس والمناخ 🌪️
+          </button>
+          <button onclick="filterNews('tech')" id="tab-tech" class="tab-btn bg-slate-900 text-slate-400 hover:text-white text-xs md:text-sm font-bold px-4 py-2 rounded-lg border border-slate-800 whitespace-nowrap">
+            تقنية وتأمين 💻
           </button>
         </div>
-      </div>
 
-    </main>
+        <!-- News Grid -->
+        <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+      </main>
+
+      <!-- Footer -->
+      <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500" id="footer-text">
+        جميع الحقوق محفوظة منصة نبض الأزمات © 2026
+      </footer>
+    </div>
+
+    <!-- AI Analysis Modal -->
+    <div id="analysis-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-2xl relative">
+        <button onclick="closeAnalysis()" class="absolute top-4 ltr:right-4 rtl:left-4 text-slate-400 hover:text-white text-lg">✕</button>
+        
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🤖</span>
+          <h3 class="font-bold text-amber-400 text-base" id="modal-heading">تقرير تحليل الأزمة المباشر</h3>
+        </div>
+
+        <div class="border-t border-slate-800 pt-3">
+          <h4 id="modal-title" class="font-bold text-slate-100 text-lg mb-2"></h4>
+          <span id="modal-meta" class="text-xs text-slate-400 block mb-4"></span>
+
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-3 text-start">
+            <div>
+              <span class="text-xs text-red-400 font-bold block mb-1" id="lbl-risk">⚠️ تقييم درجة الخطورة:</span>
+              <p id="modal-risk" class="text-xs text-slate-300"></p>
+            </div>
+            <div>
+              <span class="text-xs text-amber-400 font-bold block mb-1" id="lbl-impact">🔍 التبعات والتأثيرات المحتملة:</span>
+              <p id="modal-impact" class="text-xs text-slate-300 leading-relaxed"></p>
+            </div>
+            <div>
+              <span class="text-xs text-emerald-400 font-bold block mb-1" id="lbl-rec">💡 التوصيات والإجراءات الفورية:</span>
+              <p id="modal-recommendation" class="text-xs text-slate-300 leading-relaxed"></p>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="closeAnalysis()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl text-xs font-bold transition" id="btn-close-modal">
+          إغلاق التقرير
+        </button>
+      </div>
+    </div>
 
     <script>
-      // كلمة المرور الخاصة بك كأدمن
-      const ADMIN_PASSWORD = "admin"; 
+      let currentLang = 'ar';
+      let currentCategory = 'all';
 
-      function promptAdmin() {
-        const pass = prompt("أدخل كلمة مرور الأدمن:");
-        if (pass === ADMIN_PASSWORD) {
-          document.getElementById('admin-view').classList.remove('hidden');
-          document.getElementById('toggle-admin-btn').innerText = '🛡️ لوحة الأدمن مفعلة';
-          document.getElementById('toggle-admin-btn').classList.add('bg-amber-600', 'text-white');
-        } else if (pass !== null) {
-          alert("كلمة المرور غير صحيحة!");
+      const translations = {
+        ar: {
+          langBtn: 'English',
+          heroBadge: '🤖 منصة الذكاء الاصطناعي الأولى لمتابعة وتوقع الأزمات',
+          heroTitle: 'احصل على الأخبار العاجلة والتحليلات الأزموية في <span class="text-amber-500">الوقت الفعلي</span>',
+          heroDesc: 'يقوم نظامنا بتجميع وتتبع الأخبار العاجلة من كبرى المصادر المعتمدة حول العالم، ثم تحليل تأثيراتها السياسية، الصحية، والبيئية فور حدوثها لتزويدك برؤية دقيقة وتنبيهات مبكرة.',
+          enterBtn: 'الدخول للتطبيق المباشر 🚀',
+          feat1Title: 'مصادر موثوقة',
+          feat1Desc: 'تجميع فوري لأهم الأخبار العاجلة من وكالات الأخبار العالمية والمحلية.',
+          feat2Title: 'تحليل ذكي',
+          feat2Desc: 'ضغط أي خبر يقدم لك تقريراً فورياً عن المخاطر والتأثيرات المتوقعة.',
+          feat3Title: 'تصنيف موضوعي',
+          feat3Desc: 'تقسيم الأخبار تلقائياً حسب الأقسام السياسية والصحية والطقس والتقنية.',
+          navHome: 'الرئيسية',
+          tabAll: 'الكل 🔥',
+          tabPolitical: 'سياسية 🏛️',
+          tabHealth: 'صحية 🏥',
+          tabWeather: 'الطقس والمناخ 🌪️',
+          tabTech: 'تقنية وتأمين 💻',
+          sourceLbl: 'المصدر:',
+          aiAnalysisLbl: 'تحليل الذكاء الاصطناعي ⚡',
+          modalHeading: 'تقرير تحليل الأزمة المباشر',
+          lblRisk: '⚠️ تقييم درجة الخطورة:',
+          lblImpact: '🔍 التبعات والتأثيرات المحتملة:',
+          lblRec: '💡 التوصيات والإجراءات الفورية:',
+          btnCloseModal: 'إغلاق التقرير',
+          footerText: 'جميع الحقوق محفوظة منصة نبض الأزمات © 2026'
+        },
+        en: {
+          langBtn: 'العربية',
+          heroBadge: '🤖 The Premier AI Platform for Real-Time Crisis Monitoring',
+          heroTitle: 'Get Breaking News & Crisis Analysis in <span class="text-amber-500">Real Time</span>',
+          heroDesc: 'Our system aggregates breaking news from top global sources, analyzing geopolitical, health, and environmental impacts instantly to deliver actionable intelligence and early warnings.',
+          enterBtn: 'Launch Live App 🚀',
+          feat1Title: 'Verified Sources',
+          feat1Desc: 'Instant aggregation of breaking headlines from leading international agencies.',
+          feat2Title: 'AI Analysis',
+          feat2Desc: 'Click any headline to reveal real-time impact assessments and risk scoring.',
+          feat3Title: 'Categorized Topics',
+          feat3Desc: 'Automated streams divided into Politics, Health, Weather, and Cybersecurity.',
+          navHome: 'Home',
+          tabAll: 'All 🔥',
+          tabPolitical: 'Politics 🏛️',
+          tabHealth: 'Health 🏥',
+          tabWeather: 'Weather & Climate 🌪️',
+          tabTech: 'Tech & Cyber 💻',
+          sourceLbl: 'Source:',
+          aiAnalysisLbl: 'AI Intelligence ⚡',
+          modalHeading: 'Live Crisis Analysis Report',
+          lblRisk: '⚠️ Risk Assessment:',
+          lblImpact: '🔍 Potential Impact & Consequences:',
+          lblRec: '💡 Actionable Recommendations:',
+          btnCloseModal: 'Close Report',
+          footerText: 'All rights reserved Crisis Pulse AI © 2026'
         }
+      };
+
+      const newsData = [
+        {
+          id: 1,
+          category: 'political',
+          categoryName: { ar: 'سياسية 🏛️', en: 'Politics 🏛️' },
+          title: {
+            ar: 'مفاوضات عاجلة لمناقشة استقرار سلاسل توريد الطاقة في المنطقة',
+            en: 'Urgent Talks Convened on Regional Energy Supply Chain Security'
+          },
+          source: { ar: 'رويترز (Reuters)', en: 'Reuters' },
+          time: { ar: 'قبل 12 دقيقة', en: '12 mins ago' },
+          summary: {
+            ar: 'اجتماع طارئ بين وزراء الطاقة لبحث استقرار إمدادات النفط والغاز مع تزايد التوترات الإقليمية.',
+            en: 'Emergency summit convened between energy ministers to safeguard oil and gas routing amid tensions.'
+          },
+          risk: { ar: 'مرتفع (7/10)', en: 'High (7/10)' },
+          impact: {
+            ar: 'احتمال ارتفاع أسعار الوقود وتأثر تكاليف الشحن البحري خلال الأيام القادمة.',
+            en: 'Potential spikes in fuel prices and elevated maritime freight insurance surcharges.'
+          },
+          recommendation: {
+            ar: 'متابعة أسعار الطاقة وتأمين المخزونات التشغيلية للمؤسسات الحيوية.',
+            en: 'Monitor spot prices closely and lock in operational strategic fuel reserves.'
+          }
+        },
+        {
+          id: 2,
+          category: 'health',
+          categoryName: { ar: 'صحية 🏥', en: 'Health 🏥' },
+          title: {
+            ar: 'منظمة الصحة تحذر من موجة إنفلونزا موسمية حادة وتوصي باللقاحات',
+            en: 'WHO Issues Advisory on Severe Seasonal Influenza Surge'
+          },
+          source: { ar: 'منظمة الصحة العالمية (WHO)', en: 'WHO' },
+          time: { ar: 'قبل 45 دقيقة', en: '45 mins ago' },
+          summary: {
+            ar: 'صدور بيان عاجل يفيد بارتفاع معدلات الإصابة بالفيروسات التنفسية بنسبة 30% مقارنة بالعام الماضي.',
+            en: 'Alert issued detailing a 30% rise in acute respiratory infections compared to prior baselines.'
+          },
+          risk: { ar: 'متوسط (5/10)', en: 'Moderate (5/10)' },
+          impact: {
+            ar: 'ضغط متزايد على أقسام الطوارئ وتأخر في الخدمات الطبية غير العاجلة.',
+            en: 'Strain on emergency rooms and slight delays in elective clinical operations.'
+          },
+          recommendation: {
+            ar: 'تعزيز الإجراءات الوقائية للمؤسسات الصحية وتأمين المستلزمات الطبية الأساسية.',
+            en: 'Strengthen infection control protocols and replenish critical medical supplies.'
+          }
+        },
+        {
+          id: 3,
+          category: 'weather',
+          categoryName: { ar: 'الطقس والمناخ 🌪️', en: 'Weather 🌪️' },
+          title: {
+            ar: 'تحذير عاجل من عاصفة مدارية قد تتسبب في أمطار غزيرة وفيضانات',
+            en: 'Severe Tropical Storm Warning: Heavy Torrential Rain Expected'
+          },
+          source: { ar: 'المركز العالمي للأرصاد', en: 'Global Meteorological Center' },
+          time: { ar: 'قبل ساعة', en: '1 hour ago' },
+          summary: {
+            ar: 'تتبع حركة منخفض جوي حاد يتجه بسرعة اتجاه المناطق الساحلية مع رياح تتجاوز 90 كم/س.',
+            en: 'Tracking a deep pressure system heading toward coastal sectors with winds exceeding 90 km/h.'
+          },
+          risk: { ar: 'عالي الخطورة (9/10)', en: 'Severe (9/10)' },
+          impact: {
+            ar: 'توقف حركة الملاحة البحرية وتعطل جزئي للكهرباء وشبكات الطرق.',
+            en: 'Disruption to maritime logistics, local power grids, and low-lying transit routes.'
+          },
+          recommendation: {
+            ar: 'الابتعاد عن مجاري السيول وتفعيل خطط الطوارئ للشركات والخدمات الميدانية.',
+            en: 'Activate field crisis readiness protocols and secure outdoor infrastructure.'
+          }
+        },
+        {
+          id: 4,
+          category: 'tech',
+          categoryName: { ar: 'تقنية وتأمين 💻', en: 'Tech & Cyber 💻' },
+          title: {
+            ar: 'رصد هجمات حجب خدمة واسعة النطاق تستهدف خوادم سحابية عالمية',
+            en: 'Widespread DDoS Attacks Target Global Cloud Infrastructure'
+          },
+          source: { ar: 'مركز الأمن السيبراني', en: 'Cyber Security Center' },
+          time: { ar: 'قبل ساعتين', en: '2 hours ago' },
+          summary: {
+            ar: 'تعرض عدة مراكز بيانات لهجمات مكثفة أدت لبطء في بعض الخدمات والتطبيقات المعتمدة عليها.',
+            en: 'Major cloud nodes experiencing massive volumetric traffic spikes causing regional latency.'
+          },
+          risk: { ar: 'متوسط إلى مرتفع (6/10)', en: 'Elevated (6/10)' },
+          impact: {
+            ar: 'بطء في الاستجابة وتأخر في مزامنة البيانات بين الأنظمة.',
+            en: 'Intermittent application latency and delayed cross-region database syncing.'
+          },
+          recommendation: {
+            ar: 'تفعيل أنظمة الحماية الجدارية وتوجيه حركة المرور عبر السيرفرات البديلة.',
+            en: 'Reroute traffic through DDoS mitigation scrubbers and active fallback servers.'
+          }
+        }
+      ];
+
+      function toggleLanguage() {
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        const html = document.getElementById('html-root');
+        html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        html.lang = currentLang;
+
+        const t = translations[currentLang];
+
+        document.getElementById('lang-btn-text').innerText = t.langBtn;
+        document.querySelectorAll('.lang-btn-text-nav').forEach(el => el.innerText = t.langBtn);
+        
+        document.getElementById('hero-badge').innerText = t.heroBadge;
+        document.getElementById('hero-title').innerHTML = t.heroTitle;
+        document.getElementById('hero-desc').innerText = t.heroDesc;
+        document.getElementById('enter-btn').innerText = t.enterBtn;
+
+        document.getElementById('feat-1-title').innerText = t.feat1Title;
+        document.getElementById('feat-1-desc').innerText = t.feat1Desc;
+        document.getElementById('feat-2-title').innerText = t.feat2Title;
+        document.getElementById('feat-2-desc').innerText = t.feat2Desc;
+        document.getElementById('feat-3-title').innerText = t.feat3Title;
+        document.getElementById('feat-3-desc').innerText = t.feat3Desc;
+
+        document.getElementById('nav-home').innerText = t.navHome;
+        document.getElementById('tab-all').innerText = t.tabAll;
+        document.getElementById('tab-political').innerText = t.tabPolitical;
+        document.getElementById('tab-health').innerText = t.tabHealth;
+        document.getElementById('tab-weather').innerText = t.tabWeather;
+        document.getElementById('tab-tech').innerText = t.tabTech;
+
+        document.getElementById('modal-heading').innerText = t.modalHeading;
+        document.getElementById('lbl-risk').innerText = t.lblRisk;
+        document.getElementById('lbl-impact').innerText = t.lblImpact;
+        document.getElementById('lbl-rec').innerText = t.lblRec;
+        document.getElementById('btn-close-modal').innerText = t.btnCloseModal;
+        document.getElementById('footer-text').innerText = t.footerText;
+
+        renderNews(currentCategory);
       }
 
-      function logoutAdmin() {
-        document.getElementById('admin-view').classList.add('hidden');
-        document.getElementById('toggle-admin-btn').innerText = '🔒 دخول الأدمن';
-        document.getElementById('toggle-admin-btn').classList.remove('bg-amber-600', 'text-white');
+      function enterApp() {
+        document.getElementById('landing-page').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        renderNews('all');
+      }
+
+      function showLanding() {
+        document.getElementById('main-app').classList.add('hidden');
+        document.getElementById('landing-page').classList.remove('hidden');
+      }
+
+      function renderNews(category) {
+        currentCategory = category;
+        const grid = document.getElementById('news-grid');
+        grid.innerHTML = '';
+
+        const t = translations[currentLang];
+        const filtered = category === 'all' ? newsData : newsData.filter(n => n.category === category);
+
+        filtered.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'bg-slate-900 p-5 rounded-xl border border-slate-800 hover:border-slate-700 smooth-transition flex flex-col justify-between gap-4 cursor-pointer shadow-lg text-start';
+          card.onclick = () => openAnalysis(item.id);
+
+          card.innerHTML = `
+            <div class="space-y-3">
+              <div class="flex justify-between items-center text-xs">
+                <span class="bg-slate-800 text-amber-400 px-2.5 py-1 rounded-md font-bold">${item.categoryName[currentLang]}</span>
+                <span class="text-slate-500">${item.time[currentLang]}</span>
+              </div>
+              <h3 class="font-bold text-slate-100 text-base leading-snug">${item.title[currentLang]}</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">${item.summary[currentLang]}</p>
+            </div>
+            <div class="flex justify-between items-center border-t border-slate-800/80 pt-3 text-xs">
+              <span class="text-slate-500 font-medium">${t.sourceLbl} <strong class="text-slate-300">${item.source[currentLang]}</strong></span>
+              <span class="text-amber-500 font-bold hover:underline flex items-center gap-1">
+                ${t.aiAnalysisLbl}
+              </span>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      function filterNews(category) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.className = 'tab-btn bg-slate-900 text-slate-400 hover:text-white text-xs md:text-sm font-bold px-4 py-2 rounded-lg border border-slate-800 whitespace-nowrap';
+        });
+
+        const activeBtn = document.getElementById(`tab-${category}`);
+        if(activeBtn) {
+          activeBtn.className = 'tab-btn bg-red-600 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-lg whitespace-nowrap';
+        }
+
+        renderNews(category);
+      }
+
+      function openAnalysis(id) {
+        const news = newsData.find(n => n.id === id);
+        if(!news) return;
+
+        document.getElementById('modal-title').innerText = news.title[currentLang];
+        document.getElementById('modal-meta').innerText = `${translations[currentLang].sourceLbl} ${news.source[currentLang]} | ${news.time[currentLang]}`;
+        document.getElementById('modal-risk').innerText = news.risk[currentLang];
+        document.getElementById('modal-impact').innerText = news.impact[currentLang];
+        document.getElementById('modal-recommendation').innerText = news.recommendation[currentLang];
+
+        document.getElementById('analysis-modal').classList.remove('hidden');
+      }
+
+      function closeAnalysis() {
+        document.getElementById('analysis-modal').classList.add('hidden');
       }
     </script>
   </body>
